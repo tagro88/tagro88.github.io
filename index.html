@@ -3,25 +3,353 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cristallium · Fabrizio Putano</title>
+<title>Cristallium · Guida a pietre, cristalli e chakra</title>
+<meta name="description" content="Cristallium è l'app Android gratuita con 94 pietre e cristalli: significato, chakra, segni zodiacali, dati mineralogici e un quiz. Funziona anche offline.">
+<meta name="theme-color" content="#1c2340">
+<link rel="icon" type="image/png" href="assets/icon.png">
+<meta property="og:title" content="Cristallium · Guida a pietre e cristalli">
+<meta property="og:description" content="94 pietre e cristalli con significato, chakra, segni zodiacali e un quiz. App Android gratuita.">
+<meta property="og:image" content="https://tagro88.github.io/assets/feature.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Aclonica&family=Spectral:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root { color-scheme: light dark; }
-  body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.6;
-         max-width: 40rem; margin: 0 auto; padding: 3rem 1.25rem; color: #1f2328; background: #fff; }
-  h1 { margin-bottom: .25rem; }
-  p.sub { color: #656d76; margin-top: 0; }
-  a { color: #0969da; }
-  @media (prefers-color-scheme: dark) { body { color: #e6edf3; background: #0d1117; } p.sub { color: #8b949e; } a { color: #4493f8; } }
+  :root{
+    --ink:#1c2340; --ink-soft:#6d7396; --gold:#c98a2e; --gold-soft:#e0b56a;
+    --paper:#f5f1ea; --card:#ffffff; --line:rgba(28,35,64,.10);
+    --night:#0b0d1a; --night-2:#14172b; --violet:#7c5cff;
+    --radius:22px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:"Aclonica",system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  h1,h2,h3{font-family:"Spectral",Georgia,serif;font-weight:400;line-height:1.1;letter-spacing:-.01em;text-wrap:balance}
+  a{color:inherit}
+  img{max-width:100%;display:block}
+  .wrap{width:min(1160px,100% - 32px);margin:0 auto}
+
+  /* Nav */
+  .nav{position:sticky;top:0;z-index:20;backdrop-filter:saturate(1.4) blur(14px);-webkit-backdrop-filter:saturate(1.4) blur(14px);background:rgba(245,241,234,.78);border-bottom:1px solid var(--line)}
+  .nav .wrap{display:flex;align-items:center;gap:20px;height:68px}
+  .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:"Spectral",serif;font-size:1.35rem}
+  .brand img{width:34px;height:34px;border-radius:9px}
+  .nav ul{display:flex;gap:26px;list-style:none;margin-left:auto;font-size:.92rem;color:var(--ink-soft)}
+  .nav ul a{text-decoration:none}.nav ul a:hover{color:var(--ink)}
+  .lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;font-size:.8rem}
+  .lang button{border:0;background:none;padding:6px 11px;cursor:pointer;font:inherit;color:var(--ink-soft)}
+  .lang button[aria-pressed=true]{background:var(--ink);color:var(--paper)}
+
+  /* Bottone Play */
+  .play{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#fff;text-decoration:none;padding:13px 22px 13px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(28,35,64,.25);transition:transform .2s,box-shadow .2s}
+  .play:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(28,35,64,.32)}
+  .play svg{width:26px;height:26px;flex:none}
+  .play small{display:block;font-size:.68rem;opacity:.75;line-height:1.1}
+  .play b{display:block;font-family:"Spectral",serif;font-weight:500;font-size:1.15rem;line-height:1.1}
+  .nav .play{padding:8px 14px;border-radius:11px;box-shadow:none;font-size:.85rem}
+
+  /* Hero */
+  .hero{position:relative;padding:80px 0 40px;overflow:hidden}
+  .hero::before{content:"";position:absolute;width:900px;height:900px;right:-260px;top:-260px;border-radius:50%;background:radial-gradient(circle,rgba(201,138,46,.22),transparent 65%);pointer-events:none}
+  .hero::after{content:"";position:absolute;width:700px;height:700px;left:-300px;bottom:-300px;border-radius:50%;background:radial-gradient(circle,rgba(124,92,255,.14),transparent 65%);pointer-events:none}
+  .hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1.05fr 1fr;gap:40px;align-items:center}
+  .eyebrow{display:inline-block;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  .hero h1{font-size:clamp(2.6rem,5.6vw,4.6rem)}
+  .hero h1 em{font-style:italic;color:var(--gold)}
+  .hero p.lead{font-size:1.08rem;color:var(--ink-soft);margin:22px 0 32px;max-width:34rem}
+  .hero .cta{display:flex;flex-wrap:wrap;gap:18px;align-items:center}
+  .hero .meta{font-size:.85rem;color:var(--ink-soft)}
+  .phones{position:relative;height:620px}
+  .phone{position:absolute;width:280px;border-radius:40px;padding:10px;background:var(--night-2);box-shadow:0 40px 80px rgba(20,23,43,.35);overflow:hidden}
+  .phone img{border-radius:31px;width:100%;aspect-ratio:1080/2210;object-fit:cover}
+  .phone.a{left:6%;top:30px;transform:rotate(-6deg);animation:float 7s ease-in-out infinite}
+  .phone.b{right:4%;top:0;transform:rotate(5deg);background:#3a3f63;animation:float 7s ease-in-out -3.5s infinite}
+  @keyframes float{50%{translate:0 -14px}}
+
+  /* Numeri */
+  .stats{padding:30px 0 70px}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;text-align:center}
+  .stat b{display:block;font-family:"Spectral",serif;font-weight:400;font-size:2.6rem;line-height:1;color:var(--ink)}
+  .stat span{font-size:.85rem;color:var(--ink-soft)}
+
+  /* Sezioni */
+  section{padding:90px 0}
+  .head{text-align:center;max-width:40rem;margin:0 auto 54px}
+  .head h2{font-size:clamp(2rem,4vw,3rem)}
+  .head p{color:var(--ink-soft);margin-top:14px}
+  .features .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px;position:relative;clip-path:polygon(0 0,calc(100% - 26px) 0,100% 26px,100% 100%,0 100%);transition:transform .25s,box-shadow .25s}
+  .feature:hover{transform:translateY(-4px);box-shadow:0 20px 40px rgba(28,35,64,.08)}
+  .feature .ic{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;background:rgba(201,138,46,.12);color:var(--gold);margin-bottom:18px}
+  .feature .ic svg{width:26px;height:26px}
+  .feature h3{font-size:1.45rem;margin-bottom:8px}
+  .feature p{color:var(--ink-soft);font-size:.95rem}
+
+  /* Banda scura */
+  .night{background:radial-gradient(120% 90% at 80% 0%,#2a2350 0%,#12152a 55%,var(--night) 100%);color:var(--paper);overflow:hidden}
+  .night .wrap{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+  .night h2{font-size:clamp(2rem,4vw,3.1rem)}
+  .night p{color:#b9bdd8;margin-top:18px}
+  .night ul{list-style:none;margin-top:28px;display:grid;gap:14px}
+  .night li{display:flex;gap:12px;align-items:flex-start;color:#dfe1f0}
+  .night li::before{content:"";flex:none;width:10px;height:10px;margin-top:9px;background:var(--gold-soft);transform:rotate(45deg)}
+  .night .phone{position:relative;margin:0 auto;width:300px;background:#3a3f63}
+
+  /* Galleria */
+  .gallery .track{display:flex;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 16px 26px;scrollbar-width:thin}
+  .gallery figure{flex:none;width:250px;scroll-snap-align:center}
+  .gallery figure .phone{position:relative;width:100%;border-radius:34px;padding:8px}
+  .gallery figure .phone img{border-radius:27px}
+  .gallery figcaption{text-align:center;font-size:.88rem;color:var(--ink-soft);margin-top:14px}
+
+  /* FAQ */
+  .faq .list{max-width:760px;margin:0 auto;display:grid;gap:12px}
+  details{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 24px}
+  summary{cursor:pointer;font-family:"Spectral",serif;font-size:1.25rem;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--gold);font-size:1.5rem;line-height:1;transition:transform .2s}
+  details[open] summary::after{transform:rotate(45deg)}
+  details p{color:var(--ink-soft);margin-top:12px;font-size:.95rem}
+
+  /* CTA finale e footer */
+  .final{text-align:center;padding:100px 0}
+  .final img{width:96px;height:96px;border-radius:24px;margin:0 auto 26px;box-shadow:0 20px 40px rgba(28,35,64,.2)}
+  .final h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:28px}
+  .disclaimer{max-width:720px;margin:40px auto 0;font-size:.8rem;color:var(--ink-soft)}
+  footer{border-top:1px solid var(--line);padding:34px 0;font-size:.85rem;color:var(--ink-soft)}
+  footer .wrap{display:flex;flex-wrap:wrap;gap:12px 28px;justify-content:space-between}
+  footer nav{display:flex;gap:22px;flex-wrap:wrap}
+  footer a{text-decoration:none}footer a:hover{color:var(--ink)}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.phone{animation:none!important}}
+
+  @media (max-width:900px){
+    .nav ul{display:none}
+    .hero{padding-top:48px}
+    .hero .wrap,.night .wrap{grid-template-columns:1fr}
+    .phones{height:520px;max-width:440px;margin:0 auto;width:100%}
+    .phone{width:230px}
+    .stats .wrap{grid-template-columns:repeat(2,1fr)}
+    .features .grid{grid-template-columns:1fr}
+    section{padding:64px 0}
+  }
+  @media (max-width:480px){
+    .nav .play{display:none}
+    .phones{height:440px}.phone{width:190px;border-radius:30px;padding:7px}.phone img{border-radius:24px}
+  }
 </style>
 </head>
 <body>
-<h1>Cristallium</h1>
-<p class="sub">Cristalloterapia, chakra e segni zodiacali &middot; app per Android</p>
-<p>Sviluppata da <strong>Fabrizio Putano</strong>.</p>
-<ul>
-  <li><a href="https://play.google.com/store/apps/details?id=com.cristallium.app">Scarica Cristallium su Google Play</a></li>
-  <li><a href="https://tagro88.github.io/cristallium-privacy/privacy.html">Informativa sulla privacy</a></li>
-  <li>Assistenza: <a href="mailto:tagro88@gmail.com">tagro88@gmail.com</a></li>
-</ul>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#"><img src="assets/icon.png" alt="">Cristallium</a>
+    <ul>
+      <li><a href="#funzioni" data-i18n="nav.features">Funzioni</a></li>
+      <li><a href="#schermate" data-i18n="nav.screens">Schermate</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="lang" role="group" aria-label="Lingua">
+      <button type="button" data-lang="it" aria-pressed="true">IT</button>
+      <button type="button" data-lang="en" aria-pressed="false">EN</button>
+    </div>
+    <a class="play" href="https://play.google.com/store/apps/details?id=com.cristallium.app" data-i18n="nav.get">Scarica</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="hero.eyebrow">App Android gratuita</span>
+        <h1 data-i18n-html="hero.title">La tua guida tascabile a <em>pietre e cristalli</em></h1>
+        <p class="lead" data-i18n="hero.lead">94 pietre con significato, proprietà secondo la tradizione, chakra, segni zodiacali e dati mineralogici. Una pietra del giorno sempre nuova e un quiz per mettersi alla prova, anche senza connessione.</p>
+        <div class="cta">
+          <a class="play" href="https://play.google.com/store/apps/details?id=com.cristallium.app">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 3.5v17a1 1 0 0 0 1.5.86l14.2-8.5a1 1 0 0 0 0-1.72L5.5 2.64A1 1 0 0 0 4 3.5z" fill="#e0b56a"/></svg>
+            <span><small data-i18n="cta.small">Disponibile su</small><b>Google Play</b></span>
+          </a>
+          <span class="meta" data-i18n="hero.meta">Gratis · Android 9 o superiore</span>
+        </div>
+      </div>
+      <div class="phones reveal" aria-hidden="true">
+        <div class="phone a"><img data-shot="1" src="assets/shots/it/1.png" alt=""></div>
+        <div class="phone b"><img data-shot="3" src="assets/shots/it/3.png" alt=""></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="wrap">
+      <div class="stat reveal"><b>94</b><span data-i18n="stat.stones">pietre e cristalli</span></div>
+      <div class="stat reveal"><b>7</b><span data-i18n="stat.chakras">chakra</span></div>
+      <div class="stat reveal"><b>12</b><span data-i18n="stat.signs">segni zodiacali</span></div>
+      <div class="stat reveal"><b>5</b><span data-i18n="stat.langs">lingue</span></div>
+    </div>
+  </div>
+
+  <section class="features" id="funzioni">
+    <div class="wrap">
+      <div class="head reveal">
+        <h2 data-i18n="features.title">Tutto quello che cerchi, in un'app leggera</h2>
+        <p data-i18n="features.lead">Pensata per appassionati di cristalli, collezionisti di minerali e curiosi.</p>
+      </div>
+      <div class="grid">
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20M12 21 8 9l4-6 4 6z"/></svg></div>
+          <h3 data-i18n="f1.t">94 schede complete</h3>
+          <p data-i18n="f1.d">Colore, chakra, proprietà secondo la tradizione e dati mineralogici: durezza, densità, composizione e provenienza.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg></div>
+          <h3 data-i18n="f2.t">Ricerca e filtri</h3>
+          <p data-i18n="f2.d">Trova una pietra per nome o filtra il catalogo per chakra, dalla radice alla corona.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 1v3M12 20v3M1 12h3M20 12h3"/></svg></div>
+          <h3 data-i18n="f3.t">I 7 chakra</h3>
+          <p data-i18n="f3.d">Nome sanscrito, significato e pietre collegate a ogni centro energetico.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 3v9l6-6"/></svg></div>
+          <h3 data-i18n="f4.t">I 12 segni zodiacali</h3>
+          <p data-i18n="f4.d">Elemento, caratteristiche e pietre affini per ogni segno.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg></div>
+          <h3 data-i18n="f5.t">Quiz sempre diverso</h3>
+          <p data-i18n="f5.d">Riconosci la pietra dalla foto, scopri la più dura, abbina pietre, chakra e segni.</p>
+        </article>
+        <article class="feature reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 13A9 9 0 1 1 11 3a7 7 0 0 0 10 10z"/></svg></div>
+          <h3 data-i18n="f6.t">Offline e tema scuro</h3>
+          <p data-i18n="f6.d">Tutti i contenuti si consultano senza connessione. Tema chiaro e scuro, telefono e tablet.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="night">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="eyebrow" data-i18n="night.eyebrow">Ogni giorno una scoperta</span>
+        <h2 data-i18n="night.title">Una pietra del giorno, sempre nuova</h2>
+        <p data-i18n="night.lead">Apri l'app e trovi una pietra diversa con una curiosità da scoprire. Salva le tue preferite, costruisci la tua collezione e mettiti alla prova con il quiz.</p>
+        <ul>
+          <li data-i18n="night.l1">Curiosità "Lo sapevi che" per ogni pietra</li>
+          <li data-i18n="night.l2">Preferiti e collezione personale</li>
+          <li data-i18n="night.l3">Nessun account, nessuna registrazione</li>
+        </ul>
+      </div>
+      <div class="phone reveal"><img data-shot="6" src="assets/shots/it/6.png" alt=""></div>
+    </div>
+  </section>
+
+  <section class="gallery" id="schermate">
+    <div class="head reveal">
+      <h2 data-i18n="gallery.title">Dai un'occhiata</h2>
+      <p data-i18n="gallery.lead">Scorri le schermate dell'app.</p>
+    </div>
+    <div class="track">
+      <figure><div class="phone"><img data-shot="1" src="assets/shots/it/1.png" alt="" loading="lazy"></div><figcaption data-i18n="g1">Home e pietra del giorno</figcaption></figure>
+      <figure><div class="phone"><img data-shot="2" src="assets/shots/it/2.png" alt="" loading="lazy"></div><figcaption data-i18n="g2">Catalogo con filtri per chakra</figcaption></figure>
+      <figure><div class="phone" style="background:#3a3f63"><img data-shot="3" src="assets/shots/it/3.png" alt="" loading="lazy"></div><figcaption data-i18n="g3">Scheda della pietra</figcaption></figure>
+      <figure><div class="phone"><img data-shot="4" src="assets/shots/it/4.png" alt="" loading="lazy"></div><figcaption data-i18n="g4">Chakra e pietre associate</figcaption></figure>
+      <figure><div class="phone"><img data-shot="5" src="assets/shots/it/5.png" alt="" loading="lazy"></div><figcaption data-i18n="g5">Quiz</figcaption></figure>
+      <figure><div class="phone" style="background:#3a3f63"><img data-shot="6" src="assets/shots/it/6.png" alt="" loading="lazy"></div><figcaption data-i18n="g6">Tema scuro</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="faq" id="faq">
+    <div class="wrap">
+      <div class="head reveal"><h2 data-i18n="faq.title">Domande frequenti</h2></div>
+      <div class="list">
+        <details class="reveal"><summary data-i18n="q1">Cristallium è gratuita?</summary><p data-i18n="a1">Sì. L'app è gratuita e si sostiene con un piccolo banner pubblicitario nella schermata principale. Le schede, il quiz e tutti i contenuti restano senza pubblicità.</p></details>
+        <details class="reveal"><summary data-i18n="q2">Funziona senza connessione?</summary><p data-i18n="a2">Sì, tutti i contenuti sono nell'app e si consultano anche offline. La connessione serve solo a mostrare il banner.</p></details>
+        <details class="reveal"><summary data-i18n="q3">Serve un account?</summary><p data-i18n="a3">No. Nessun account e nessuna registrazione: preferiti e collezione restano salvati sul tuo dispositivo.</p></details>
+        <details class="reveal"><summary data-i18n="q4">Su quali dispositivi funziona?</summary><p data-i18n="a4">Su telefoni e tablet Android 9 o superiore, in verticale e in orizzontale.</p></details>
+        <details class="reveal"><summary data-i18n="q5">Come vengono trattati i miei dati?</summary><p><span data-i18n="a5">Il consenso agli annunci si gestisce in qualsiasi momento dalle Impostazioni dell'app. Tutti i dettagli sono nell'</span><a href="https://tagro88.github.io/cristallium-privacy/privacy.html" data-i18n="a5l">informativa sulla privacy</a>.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="final">
+    <div class="wrap reveal">
+      <img src="assets/icon.png" alt="Cristallium">
+      <h2 data-i18n="final.title">Inizia a esplorare il mondo dei cristalli</h2>
+      <a class="play" href="https://play.google.com/store/apps/details?id=com.cristallium.app">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 3.5v17a1 1 0 0 0 1.5.86l14.2-8.5a1 1 0 0 0 0-1.72L5.5 2.64A1 1 0 0 0 4 3.5z" fill="#e0b56a"/></svg>
+        <span><small data-i18n="cta.small">Disponibile su</small><b>Google Play</b></span>
+      </a>
+      <p class="disclaimer" data-i18n="disclaimer">Le informazioni contenute nell'app appartengono alla tradizione della cristalloterapia e hanno finalità divulgative e culturali. Non costituiscono indicazioni mediche e non sostituiscono il parere di un medico.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Fabrizio Putano</span>
+    <nav>
+      <a href="https://tagro88.github.io/cristallium-privacy/privacy.html" data-i18n="footer.privacy">Privacy</a>
+      <a href="mailto:tagro88@gmail.com" data-i18n="footer.contact">Assistenza</a>
+      <a href="https://play.google.com/store/apps/details?id=com.cristallium.app">Google Play</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  const EN = {
+    "nav.features":"Features","nav.screens":"Screenshots","nav.get":"Get it",
+    "hero.eyebrow":"Free Android app",
+    "hero.title":"Your pocket guide to <em>crystals and stones</em>",
+    "hero.lead":"94 stones with meanings, traditional properties, chakras, zodiac signs and mineral data. A new stone of the day and a quiz to test yourself, even offline.",
+    "cta.small":"Get it on","hero.meta":"Free · Android 9 or later",
+    "stat.stones":"stones and crystals","stat.chakras":"chakras","stat.signs":"zodiac signs","stat.langs":"languages",
+    "features.title":"Everything you need, in a light app","features.lead":"Made for crystal lovers, mineral collectors and the simply curious.",
+    "f1.t":"94 detailed entries","f1.d":"Color, chakra, traditional properties and mineral data: hardness, density, composition and origin.",
+    "f2.t":"Search and filters","f2.d":"Find a stone by name or filter the catalog by chakra, from root to crown.",
+    "f3.t":"The 7 chakras","f3.d":"Sanskrit name, meaning and related stones for each energy center.",
+    "f4.t":"The 12 zodiac signs","f4.d":"Element, traits and matching stones for every sign.",
+    "f5.t":"An ever-changing quiz","f5.d":"Recognize a stone from its photo, find the hardest one, match stones, chakras and signs.",
+    "f6.t":"Offline and dark theme","f6.d":"All content works without a connection. Light and dark theme, phone and tablet.",
+    "night.eyebrow":"A discovery every day","night.title":"A new stone of the day, every day",
+    "night.lead":"Open the app and find a different stone with a fun fact to discover. Save your favorites, build your collection and test yourself with the quiz.",
+    "night.l1":"A \"Did you know\" fact for every stone","night.l2":"Favorites and personal collection","night.l3":"No account, no sign-up",
+    "gallery.title":"Take a look","gallery.lead":"Scroll through the app.",
+    "g1":"Home and stone of the day","g2":"Catalog with chakra filters","g3":"Stone details","g4":"Chakras and matching stones","g5":"Quiz","g6":"Dark theme",
+    "faq.title":"FAQ",
+    "q1":"Is Cristallium free?","a1":"Yes. The app is free and supported by a small ad banner on the main screen. Stone pages, the quiz and all content stay ad-free.",
+    "q2":"Does it work offline?","a2":"Yes, all content is inside the app and works offline. A connection is only needed to show the banner.",
+    "q3":"Do I need an account?","a3":"No. No account and no sign-up: favorites and collection stay on your device.",
+    "q4":"Which devices are supported?","a4":"Android phones and tablets running Android 9 or later, in portrait and landscape.",
+    "q5":"How is my data handled?","a5":"You can manage ad consent at any time from the app's Settings. All details are in the ","a5l":"privacy policy",
+    "final.title":"Start exploring the world of crystals",
+    "disclaimer":"The information in the app comes from crystal healing tradition and is provided for cultural and educational purposes. It is not medical advice and does not replace a doctor's opinion.",
+    "footer.privacy":"Privacy","footer.contact":"Support"
+  };
+  const IT = {};
+  document.querySelectorAll("[data-i18n]").forEach(el => IT[el.dataset.i18n] = el.textContent);
+  document.querySelectorAll("[data-i18n-html]").forEach(el => IT[el.dataset.i18nHtml] = el.innerHTML);
+
+  function setLang(lang) {
+    const dict = lang === "en" ? EN : IT;
+    document.documentElement.lang = lang;
+    document.querySelectorAll("[data-i18n]").forEach(el => { const v = dict[el.dataset.i18n]; if (v) el.textContent = v; });
+    document.querySelectorAll("[data-i18n-html]").forEach(el => { const v = dict[el.dataset.i18nHtml]; if (v) el.innerHTML = v; });
+    document.querySelectorAll("img[data-shot]").forEach(img => img.src = `assets/shots/${lang}/${img.dataset.shot}.png`);
+    document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === lang));
+    try { localStorage.setItem("lang", lang); } catch (e) {}
+  }
+  document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.lang)));
+  let saved = null; try { saved = localStorage.getItem("lang"); } catch (e) {}
+  const initial = saved || (navigator.language || "it").slice(0, 2);
+  if (initial !== "it") setLang(initial === "en" ? "en" : "en");
+
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+</script>
 </body>
 </html>
